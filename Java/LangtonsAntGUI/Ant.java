@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mouseoncheckerboard;
+package LangtonsAntGUI;
 
 
-public class Mouse {
+public class Ant {
     
     
     public Position position;
     
-    public Mouse(Position position){
+    public Ant(Position position){
         this.position = position;
     }
     
@@ -20,9 +20,9 @@ public class Mouse {
                 case Position.NORTH:
                     return new Position(position.x + 1, position.y, Position.EAST);
                 case Position.EAST:
-                    return new Position(position.x, position.y - 1, Position.SOUTH);
+                    return new Position(position.x, position.y + 1, Position.SOUTH);
                 case Position.WEST:
-                    return new Position(position.x, position.y + 1, Position.NORTH);
+                    return new Position(position.x, position.y - 1, Position.NORTH);
                 case Position.SOUTH:
                     return new Position(position.x - 1, position.y, Position.WEST);
                 default: return null;
@@ -34,9 +34,9 @@ public class Mouse {
                 case Position.NORTH:
                     return new Position(position.x - 1, position.y, Position.WEST);
                 case Position.EAST:
-                    return new Position(position.x, position.y + 1, Position.NORTH);
+                    return new Position(position.x, position.y - 1, Position.NORTH);
                 case Position.WEST:
-                    return new Position(position.x, position.y - 1, Position.SOUTH);
+                    return new Position(position.x, position.y + 1, Position.SOUTH);
                 case Position.SOUTH:
                     return new Position(position.x + 1, position.y, Position.EAST);
                 default: return null;
