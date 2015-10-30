@@ -43,7 +43,6 @@ namespace Monkeys_and_Coconuts
                 double nuts = 1;
                 while (!DivideCoconuts(sailors, sailors, nuts))
                     nuts += 1;
-
                 Console.WriteLine(sailors + " : " + nuts);
             }
             Console.ReadLine();
@@ -53,13 +52,8 @@ namespace Monkeys_and_Coconuts
         public static bool DivideCoconuts(int n, int sailors, double nuts)
         {
             if (n == 0)
-            {
-                if (nuts == 0)
-                    return false;
-                return nuts % sailors == 0;
-            }
+                return (nuts == 0)? false : nuts % sailors == 0;
             return DivideCoconuts(n - 1, sailors, (nuts - 1) * (sailors - 1) / sailors);
-
         }
     }
 }
