@@ -25,9 +25,7 @@ namespace MinimumImpossibleSum
             {
                 var v = MinimumImpossibleSum.MinImpossibleSum(sum, new List<int>(), list.ToList());
                 if (v == null)
-                {
                     break;
-                }
                 sum++;
             }
             //done
