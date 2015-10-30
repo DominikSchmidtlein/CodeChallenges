@@ -38,11 +38,7 @@ namespace IdentifyingAnagrams
         public static bool Anagrams_Recursive(string s1, string s2)
         {
             if (s1.Length == 0 || s2.Length == 0)
-            {
-                if (s1.Equals(s2))
-                    return true;
-                return false;
-            }
+                return s1.Equals(s2);
             if (s2.Contains(s1[0]))
             {
                 s2 = s2.RemoveChar(s1[0]);
