@@ -1,7 +1,14 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Dominik Schmidtlein 1/7/2016
+ * 
+ * The purpose of the Langton's Ant simulation is to observe how Langton's Ant moves
+ * given different starting setups.
+ * Langton's Ant follows a few simple steps when moving:
+ * -Ant will move every round
+ * -if position is on a black square, turn 90 degrees left
+ * -if position is on a white square, turn 90 degrees right
+ *
+ * The interesting observation is that Langton's Ant always eventually moves in a repetitive column.
  */
 package LangtonsAntGUI;
 
