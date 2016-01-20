@@ -5,61 +5,111 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class Server {
-	
+
+	public static final int RDQ = 1;
+	public static final int WRQ = 2;
+	public static final int INV = -1;
+
 	public static final int SERVER_PORT = 69;
-	
+	public static final int BUFSIZ = 1024;
+
 	private DatagramSocket socket;
 
 	public Server(){
 		try {
+
 			socket = new DatagramSocket(SERVER_PORT);
-			
-			byte[] buf = new byte[64];
-			DatagramPacket packet = new DatagramPacket(buf, buf.length);
-			
-			socket.receive(packet);
-			
-			buf = shrinkByteArray(packet.getData(), getLength(packet.getData()));
-			
-			System.out.println("Received: " + buf + ", " + new String(buf));
-			
-			buf = "Hi".getBytes();
-			packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), packet.getPort());
-			
-			System.out.println("Sending: " + packet.getData() + ", " + new String(packet.getData()));
-			
-			DatagramSocket tempSocket = new DatagramSocket();
-			tempSocket.send(packet);
-			tempSocket.close();
-			
-			socket.close();
-			
+			int result;
+			byte[] buf;
+
+			while(true){
+
+				buf = new byte[BUFSIZ];
+				DatagramPacket packet = new DatagramPacket(buf, buf.length);
+
+				socket.receive(packet);
+
+				buf = new byte[packet.getLength()];
+				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
+
+				result = verifyData(buf);
+
+				System.out.println("Received: " + getStringOfBytes(buf) + ", " + new String(buf));
+
+				if(result == RDQ)
+					buf = new byte[]{0,3,0,1};
+				else if(result == WRQ)
+					buf = new byte[]{0,4,0,0};
+				else
+					throw new Exception();
+
+				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), packet.getPort());
+
+				System.out.println("Sending: " + getStringOfBytes(buf) + ", " + new String(buf));
+
+				DatagramSocket tempSocket = new DatagramSocket();
+				tempSocket.send(packet);
+				tempSocket.close();
+			}
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+
 	}
-	
-	private int getLength(byte[] data){
-		int nulls = 0;
-		for(int i = 0; i < data.length; i ++){
-			if(data[i] == 0)
-				nulls += 1;
-			if(nulls >= 3)
-				return i;
+
+	private String getStringOfBytes(byte[] data){
+		String s = "";
+		for(byte b: data)
+			s += b + " ";
+		return s;
+	}
+
+	private byte[] concatenateArrays(byte[] a, byte[] b){
+		byte[] c = new byte[a.length + b.length];
+		System.arraycopy(a, 0, c, 0, a.length);
+		System.arraycopy(b, 0, c, a.length, b.length);
+		return c;
+	}
+
+	private int verifyData(byte[] data){
+		if(data == null)
+			return INV;
+		if(data.length < 6)
+			return INV;
+		if(data[0] != 0)
+			return INV;
+		if(data[1] != RDQ && data[1] != WRQ)
+			return INV;
+
+		byte[] filename = new byte[0];
+		int i;
+		for(i = 2; i < data.length && data[i] != 0; i++){
+			filename = concatenateArrays(filename, new byte[]{data[i]});
 		}
-		return -1;
+
+		if(filename.length == 0)
+			return INV;
+		if(i >= data.length - 2)
+			return INV;
+
+		byte[] filemode = new byte[0];
+		for(i = i + 1; i < data.length && data[i] != 0; i++){
+			filemode = concatenateArrays(filemode, new byte[]{data[i]});
+		}
+
+		if(filemode.length == 0)
+			return INV;
+		if(data.length - 1 != i)
+			return INV;
+		if(data[i] != 0)
+			return INV;
+
+		return data[1];		
 	}
-	
-	private byte[] shrinkByteArray(byte[] large, int length){
-		byte[] small = new byte[length];
-		for(int i = 0; i < length; i ++)
-			small[i] = large[i];
-		return small;
-	}
-	
+
 	public static void main(String[] args) {
 		new Server();
 	}
-	
+
 }
