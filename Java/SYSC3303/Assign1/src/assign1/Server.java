@@ -4,18 +4,47 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+/**
+ * The server listens on a public port. Depending on
+ * the type of incoming message the server returns a 
+ * unique packet. Apart from the first incoming packet,
+ * all other packets are sent from sockets which are 
+ * created as needed.
+ */
 public class Server {
 
+	/**A constant to represent the reception
+	 * of a read request.*/
 	public static final int RDQ = 1;
+	/**A constant to represent the reception
+	 * of a write request.*/
 	public static final int WRQ = 2;
+	/**The constant to represent an invalid
+	 * packet contents*/
 	public static final int INV = -1;
-
+	
+	/**The public port on which the server listens.*/
 	public static final int SERVER_PORT = 69;
+	
+	/**The default size for the buffer inside the
+	 * datagram packet.*/
 	public static final int BUFSIZ = 1024;
 
 	private DatagramSocket socket;
 
 	public Server(){
+		
+	}
+	/**
+	 * The run method listens on the public server port.
+	 * When a packet is received, the server prints out
+	 * the contents of the packet. If the packet is a read
+	 * request, the bytes 0301 are sent back to the client.
+	 * If the packet is a write request, the bytes 0400 are
+	 * sent back to the client. In case of an invalid packet,
+	 * an exception is thrown.
+	 */
+	private void run() {
 		try {
 
 			socket = new DatagramSocket(SERVER_PORT);
@@ -58,6 +87,13 @@ public class Server {
 
 	}
 
+	/**
+	 * Returns a string equivalent to the contents of the byte
+	 * array, where each byte is separated by a space.
+	 * 
+	 * @param data the array to be displayed in byte form
+	 * @return a string of the bytes with space separation
+	 */
 	private String getStringOfBytes(byte[] data){
 		String s = "";
 		for(byte b: data)
@@ -65,6 +101,14 @@ public class Server {
 		return s;
 	}
 
+	/**
+	 * Generates one byte array where array a is first
+	 * and array b is second.
+	 * 
+	 * @param a occupies indexes 0 to len(a)-1 of new array
+	 * @param b occupies indexes len(a) to len(a)+len(b)-1
+	 * @return the concatenation of arrays a and b
+	 */
 	private byte[] concatenateArrays(byte[] a, byte[] b){
 		byte[] c = new byte[a.length + b.length];
 		System.arraycopy(a, 0, c, 0, a.length);
@@ -72,6 +116,18 @@ public class Server {
 		return c;
 	}
 
+	/**
+	 * The data verification class checks that the
+	 * data is consistent with the format presented in
+	 * the assignment description. The byte array must
+	 * start with 01 or 02, then it must be followed by 
+	 * a file name, then a 0, then a mode, then a 0 and
+	 * then nothing else.
+	 * 
+	 *  @param	data	the byte array to be verified
+	 *  @return			-1 (invalid),1 (read),2 (write) 
+	 *  				depending on verification result
+	 */
 	private int verifyData(byte[] data){
 		if(data == null)
 			return INV;
@@ -108,8 +164,14 @@ public class Server {
 		return data[1];		
 	}
 
+	/**
+	 * The main method initializes the server class
+	 * and calls its run method.
+	 * 
+	 * @param args potential command line arguments
+	 */
 	public static void main(String[] args) {
-		new Server();
+		new Server().run();
 	}
 
 }
