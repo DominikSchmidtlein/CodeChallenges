@@ -3,6 +3,7 @@ package assign1;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Arrays;
 
 /**
  * The server listens on a public port. Depending on
@@ -63,18 +64,18 @@ public class Server {
 
 				result = verifyData(buf);
 
-				System.out.println("Received: " + getStringOfBytes(buf) + ", " + new String(buf));
+				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
 
 				if(result == RDQ)
 					buf = new byte[]{0,3,0,1};
 				else if(result == WRQ)
 					buf = new byte[]{0,4,0,0};
 				else
-					throw new Exception();
+					throw new Exception("invalid packet");
 
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), packet.getPort());
 
-				System.out.println("Sending: " + getStringOfBytes(buf) + ", " + new String(buf));
+				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
 
 				DatagramSocket tempSocket = new DatagramSocket();
 				tempSocket.send(packet);
@@ -83,6 +84,7 @@ public class Server {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			System.out.println(e.getMessage());
 		}
 
 	}

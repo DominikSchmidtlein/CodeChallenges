@@ -3,6 +3,7 @@ package assign1;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Arrays;
 
 /**
  * The Host lives in between the client and the server.
@@ -52,10 +53,10 @@ public class Host {
 				
 				buf = new byte[packet.getLength()];
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
-				System.out.println("Received: " + getStringOfBytes(buf) + ", " + new String(buf));
+				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
 				clientPort = packet.getPort();
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), SERVER_PORT);
-				System.out.println("Sending: " + getStringOfBytes(buf) + ", " + new String(buf));
+				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
 
 				serverSocket.send(packet);
 
@@ -66,9 +67,9 @@ public class Host {
 				
 				buf = new byte[packet.getLength()];
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
-				System.out.println("Received: " + getStringOfBytes(buf) + ", " + new String(buf));
+				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), clientPort);
-				System.out.println("Sending: " + getStringOfBytes(buf) + ", " + new String(buf));
+				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
 
 				clientSocket = new DatagramSocket();
 				clientSocket.send(packet);

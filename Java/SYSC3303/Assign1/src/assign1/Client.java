@@ -3,6 +3,7 @@ package assign1;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Arrays;
 
 public class Client {
 
@@ -41,10 +42,12 @@ public class Client {
 				buf = concatenateArrays(buf, new byte[]{0});
 				buf = concatenateArrays(buf, FILEMODE.getBytes());
 				buf = concatenateArrays(buf, new byte[]{0});
+				if(i == 10)
+					buf = concatenateArrays(buf, new byte[]{0});
 
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), HOST_PORT);
 
-				System.out.println("Sending: " + getStringOfBytes(buf) + ", " + new String(buf));
+				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
 
 				socket.send(packet);
 
@@ -55,7 +58,7 @@ public class Client {
 				buf = new byte[packet.getLength()];
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
 
-				System.out.println("Received: " + getStringOfBytes(buf) + ", " + new String(buf));
+				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
 			}
 			socket.close();
 		}catch(Exception e){	
@@ -97,7 +100,7 @@ public class Client {
 	 * @param args command line arguments which are not used
 	 */
 	public static void main(String[] args) {
-		new Client();
+		new Client().run();
 	}
 
 }
