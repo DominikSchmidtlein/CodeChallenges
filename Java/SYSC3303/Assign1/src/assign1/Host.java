@@ -39,60 +39,65 @@ public class Host {
 	 */
 	private void run(){
 		try{
+			//create DS to receive at port 68
 			receiveSocket = new DatagramSocket(HOST_PORT);
+			//create DS to send and receive, port doesn't matter
 			serverSocket = new DatagramSocket();
 
 			byte[] buf;
 			DatagramPacket packet;
 
-			do{
+			//repeat forever
+			while(true){
+				//host waits to receive a request on port 68, buffer is larger than necessary
 				buf = new byte[BUFSIZ];
 				packet = new DatagramPacket(buf, buf.length);
-
 				receiveSocket.receive(packet);
 				
+				//host prints out the information received as bytes and string
 				buf = new byte[packet.getLength()];
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
 				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
+
+				//host records client port for later use
 				clientPort = packet.getPort();
+				
+				//host forms a packet containing identical data, for port 69
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), SERVER_PORT);
+				//print out information that is going to be send to server
 				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
 
+				//sends packet on send/receive socket to port 69
 				serverSocket.send(packet);
 
+				//wait for response packet
 				buf = new byte[BUFSIZ];
 				packet = new DatagramPacket(buf, buf.length);
-				
 				serverSocket.receive(packet);
 				
+				//print out information that is received as bytes and string
 				buf = new byte[packet.getLength()];
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
 				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
+				
+				//create new packet with same data, to be sent back to client
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), clientPort);
+				//print out information to be sent to client
 				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
 
+				//create DS to use to send packet to client
 				clientSocket = new DatagramSocket();
+				//send packet to client
 				clientSocket.send(packet);
+				//close socket
 				clientSocket.close();
 				
-			}while(true);
+			}
 
 		}catch(Exception e){
 
 		}
 
-	}
-	/**
-	 * Returns a string of the byte representation of the byte array.
-	 * 
-	 * @param	data	the byte array that will be converted to string
-	 * @return			the string representation of the array 
-	 */
-	private String getStringOfBytes(byte[] data){
-		String s = "";
-		for(byte b: data)
-			s += b + " ";
-		return s;
 	}
 
 	/**

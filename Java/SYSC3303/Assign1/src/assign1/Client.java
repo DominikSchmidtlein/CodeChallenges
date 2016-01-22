@@ -34,49 +34,48 @@ public class Client {
 	private void run(){
 		try{
 			byte[] buf;
+			//create DS for sending and receiving, port is irrelevant
+			socket = new DatagramSocket();
+			
+			//repeat 11 times
 			for(int i = 0; i < 11; i++){
-				socket = new DatagramSocket();
-
+			
+				//first 2 bytes are 0 1 for read and 0 2 for write
 				buf = new byte[]{0, (byte) (i%2+1)};
+				//get the bytes from the filename string
 				buf = concatenateArrays(buf, FILENAME.getBytes());
+				//add 0 byte to indicate end of filename
 				buf = concatenateArrays(buf, new byte[]{0});
+				//add the bytes from a mode string
 				buf = concatenateArrays(buf, FILEMODE.getBytes());
+				//add 0 byte to show end of mode, no bytes after this
 				buf = concatenateArrays(buf, new byte[]{0});
+				//request 11 should be an invalid request, add byte after 3rd 0
 				if(i == 10)
 					buf = concatenateArrays(buf, new byte[]{0});
-
+				//create DatagramPacket with data and length inside, to port 68 (host)
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), HOST_PORT);
 
+				//print out packet information as bytes and string
 				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
 
+				//send packet to port 68
 				socket.send(packet);
 
+				//create a receive packet who's buffer is larger than necessary
 				buf = new byte[BUFSIZ];
 				packet = new DatagramPacket(buf, buf.length);
+				//wait to receive a response packet
 				socket.receive(packet);
 				
+				//print packet data as bytes and string
 				buf = new byte[packet.getLength()];
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
-
 				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
 			}
 			socket.close();
 		}catch(Exception e){	
 		}
-	}
-
-	/**
-	 * Returns a string where the contents of the byte
-	 * array are separated by spaces.
-	 * @param data the byte array to be converted to string
-	 * @return a space separated representation of the byte 
-	 * values of data
-	 */
-	private String getStringOfBytes(byte[] data){
-		String s = "";
-		for(byte b: data)
-			s += b + " ";
-		return s;
 	}
 
 	/**

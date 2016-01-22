@@ -48,37 +48,46 @@ public class Server {
 	private void run() {
 		try {
 
+			//create DS for receiving at port 69
 			socket = new DatagramSocket(SERVER_PORT);
 			int result;
 			byte[] buf;
 
+			//repeat forever
 			while(true){
 
+				//wait to receive request on port 69
 				buf = new byte[BUFSIZ];
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
-
 				socket.receive(packet);
 
+				//verify that packet is either read or write request
 				buf = new byte[packet.getLength()];
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
-
 				result = verifyData(buf);
-
+				//print out information received as bytes and string
 				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
 
+				//if request is to read, prepare 0301 byte response
 				if(result == RDQ)
 					buf = new byte[]{0,3,0,1};
+				//if request is to write, prepare 0400 byte response
 				else if(result == WRQ)
 					buf = new byte[]{0,4,0,0};
+				//if invalid, throw exception and quit
 				else
 					throw new Exception("invalid packet");
 
+				//create response packet with appropriate byte response
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), packet.getPort());
-
+				//print response information in bytes and string
 				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
 
+				//create DS for use on just this request
 				DatagramSocket tempSocket = new DatagramSocket();
+				//send packet via new socket to port received in request
 				tempSocket.send(packet);
+				//close socket that was just created
 				tempSocket.close();
 			}
 
@@ -87,20 +96,6 @@ public class Server {
 			System.out.println(e.getMessage());
 		}
 
-	}
-
-	/**
-	 * Returns a string equivalent to the contents of the byte
-	 * array, where each byte is separated by a space.
-	 * 
-	 * @param data the array to be displayed in byte form
-	 * @return a string of the bytes with space separation
-	 */
-	private String getStringOfBytes(byte[] data){
-		String s = "";
-		for(byte b: data)
-			s += b + " ";
-		return s;
 	}
 
 	/**
@@ -131,35 +126,46 @@ public class Server {
 	 *  				depending on verification result
 	 */
 	private int verifyData(byte[] data){
+		//check is data is null
 		if(data == null)
 			return INV;
+		//check is data has minimum acceptable length 01n0m0 or 02n0m0 where n is filename and m is mode
 		if(data.length < 6)
 			return INV;
+		//check first byte is 0
 		if(data[0] != 0)
 			return INV;
+		//check second byte is 1 or 2
 		if(data[1] != RDQ && data[1] != WRQ)
 			return INV;
 
+		//extract filename while checking for second 0 byte
 		byte[] filename = new byte[0];
 		int i;
 		for(i = 2; i < data.length && data[i] != 0; i++){
 			filename = concatenateArrays(filename, new byte[]{data[i]});
 		}
 
+		//check that filename has minimum length 1
 		if(filename.length == 0)
 			return INV;
+		//check that there are enough bytes after second 0 for valid mode and end 0
 		if(i >= data.length - 2)
 			return INV;
 
+		//extract mode while checking for final 0 byte
 		byte[] filemode = new byte[0];
 		for(i = i + 1; i < data.length && data[i] != 0; i++){
 			filemode = concatenateArrays(filemode, new byte[]{data[i]});
 		}
 
+		//check that filemode is minimum length 1
 		if(filemode.length == 0)
 			return INV;
+		//check that the 3rd 0 byte is the last byte in array
 		if(data.length - 1 != i)
 			return INV;
+		//check that array ends in 0
 		if(data[i] != 0)
 			return INV;
 
