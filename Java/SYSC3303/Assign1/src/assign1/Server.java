@@ -66,7 +66,8 @@ public class Server {
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
 				result = verifyData(buf);
 				//print out information received as bytes and string
-				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
+				//System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
+				printDatagram("Received", packet.getPort(), buf);
 
 				//if request is to read, prepare 0301 byte response
 				if(result == RDQ)
@@ -81,7 +82,8 @@ public class Server {
 				//create response packet with appropriate byte response
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), packet.getPort());
 				//print response information in bytes and string
-				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
+				//System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
+				printDatagram("Sending", packet.getPort(), buf);
 
 				//create DS for use on just this request
 				DatagramSocket tempSocket = new DatagramSocket();
@@ -170,6 +172,18 @@ public class Server {
 			return INV;
 
 		return data[1];		
+	}
+	
+	/**
+	 * Print the mode port and buffer contents as bytes and string.
+	 * @param mode either Sending or Receiving
+	 * @param port where the packet is received from or sent to
+	 * @param buf the contents of the datagram packet
+	 */
+	private void printDatagram(String mode, int port, byte[] buf){
+		System.out.println(mode + " to/from :" + port);
+		System.out.println("bytes: " + Arrays.toString(buf));
+		System.out.println("string: " + new String(buf));
 	}
 
 	/**

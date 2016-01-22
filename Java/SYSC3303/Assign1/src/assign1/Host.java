@@ -57,7 +57,8 @@ public class Host {
 				//host prints out the information received as bytes and string
 				buf = new byte[packet.getLength()];
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
-				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
+				//System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
+				printDatagram("Received", packet.getPort(), buf);
 
 				//host records client port for later use
 				clientPort = packet.getPort();
@@ -65,7 +66,8 @@ public class Host {
 				//host forms a packet containing identical data, for port 69
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), SERVER_PORT);
 				//print out information that is going to be send to server
-				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
+				//System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
+				printDatagram("Sending", packet.getPort(), buf);
 
 				//sends packet on send/receive socket to port 69
 				serverSocket.send(packet);
@@ -78,12 +80,14 @@ public class Host {
 				//print out information that is received as bytes and string
 				buf = new byte[packet.getLength()];
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
-				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
+				//System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
+				printDatagram("Received", packet.getPort(), buf);
 				
 				//create new packet with same data, to be sent back to client
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), clientPort);
 				//print out information to be sent to client
-				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
+				//System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
+				printDatagram("Sending", packet.getPort(), buf);
 
 				//create DS to use to send packet to client
 				clientSocket = new DatagramSocket();
@@ -95,9 +99,21 @@ public class Host {
 			}
 
 		}catch(Exception e){
-
+			e.printStackTrace();
 		}
 
+	}
+	
+	/**
+	 * Print the mode port and buffer contents as bytes and string.
+	 * @param mode either Sending or Receiving
+	 * @param port where the packet is received from or sent to
+	 * @param buf the contents of the datagram packet
+	 */
+	private void printDatagram(String mode, int port, byte[] buf){
+		System.out.println(mode + " to/from :" + port);
+		System.out.println("bytes: " + Arrays.toString(buf));
+		System.out.println("string: " + new String(buf));
 	}
 
 	/**

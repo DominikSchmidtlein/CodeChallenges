@@ -57,7 +57,8 @@ public class Client {
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), HOST_PORT);
 
 				//print out packet information as bytes and string
-				System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
+				//System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
+				printDatagram("Sending", packet.getPort(), buf);
 
 				//send packet to port 68
 				socket.send(packet);
@@ -71,11 +72,24 @@ public class Client {
 				//print packet data as bytes and string
 				buf = new byte[packet.getLength()];
 				System.arraycopy(packet.getData(), packet.getOffset(), buf, 0, packet.getLength());
-				System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
+				//System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
+				printDatagram("Received", packet.getPort(), buf);
 			}
 			socket.close();
 		}catch(Exception e){	
 		}
+	}
+	
+	/**
+	 * Print the mode port and buffer contents as bytes and string.
+	 * @param mode either Sending or Receiving
+	 * @param port where the packet is received from or sent to
+	 * @param buf the contents of the datagram packet
+	 */
+	private void printDatagram(String mode, int port, byte[] buf){
+		System.out.println(mode + " to/from :" + port);
+		System.out.println("bytes: " + Arrays.toString(buf));
+		System.out.println("string: " + new String(buf));
 	}
 
 	/**
