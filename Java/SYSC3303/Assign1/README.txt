@@ -15,4 +15,10 @@ INSTRUCTIONS
 3. Run the Server.
 4. Run the Client
 5. Observe the 10 alternating read/write requests and the invalid packet at the end.
-6. Forcefully stop the Host.
+6. Forcefully stop the Host and Client(still waiting for last acknowledge message).
+
+To see the use case map, see the "UCM" folder
+
+To see the UML class diagrams, see the "UML Class Diagrams" folder
+
+To see the UML collaboration diagrams, see the "UML Collaboration Diagrams" folder

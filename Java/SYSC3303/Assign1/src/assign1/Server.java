@@ -67,7 +67,7 @@ public class Server {
 				result = verifyData(buf);
 				//print out information received as bytes and string
 				//System.out.println("Received: " + Arrays.toString(buf) + ", " + new String(buf));
-				printDatagram("Received", packet.getPort(), buf);
+				printDatagram("Received from", packet.getPort(), buf);
 
 				//if request is to read, prepare 0301 byte response
 				if(result == RDQ)
@@ -83,7 +83,7 @@ public class Server {
 				packet = new DatagramPacket(buf, buf.length, InetAddress.getLocalHost(), packet.getPort());
 				//print response information in bytes and string
 				//System.out.println("Sending: " + Arrays.toString(buf) + ", " + new String(buf));
-				printDatagram("Sending", packet.getPort(), buf);
+				printDatagram("Sending to", packet.getPort(), buf);
 
 				//create DS for use on just this request
 				DatagramSocket tempSocket = new DatagramSocket();
@@ -95,6 +95,7 @@ public class Server {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			socket.close();
 			System.out.println(e.getMessage());
 		}
 
@@ -181,9 +182,10 @@ public class Server {
 	 * @param buf the contents of the datagram packet
 	 */
 	private void printDatagram(String mode, int port, byte[] buf){
-		System.out.println(mode + " to/from :" + port);
+		System.out.println(mode + ": " + port);
 		System.out.println("bytes: " + Arrays.toString(buf));
 		System.out.println("string: " + new String(buf));
+		System.out.println();
 	}
 
 	/**
