@@ -32,6 +32,11 @@ public class ChefCurry implements Runnable {
 	}
 	
 	private void withThePot(){
+		try {
+			Thread.sleep(500);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		System.out.println(name + " made a sandwich.");
 	}
 	

@@ -34,6 +34,13 @@ public class Agent implements Runnable {
 			ingredients.add(Ingredient.BREAD);
 			ingredients.add(Ingredient.JAM);
 		}
+		
+		try {
+			Thread.sleep(500);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		return ingredients;
 	}
 
