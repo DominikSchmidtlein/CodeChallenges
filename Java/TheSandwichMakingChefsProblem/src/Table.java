@@ -43,6 +43,9 @@ public class Table {
 		return ingredients;
 	}
 
+	/**
+	 * Increments the number of sandwiches that have been made by one.
+	 */
 	public synchronized void incrementNumberOfSandwichesMade() {
 		numberOfSandwichesMade++;
 	}
