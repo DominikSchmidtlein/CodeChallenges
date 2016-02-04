@@ -5,10 +5,12 @@ public class ChefCurry implements Runnable {
 	private String name;
 	private ArrayList<Ingredient> neededIngredients;
 	private Table table;
+	private int sandwichLimit;
 	
-	public ChefCurry(Table table, Ingredient ingredient) {		
+	public ChefCurry(Table table, Ingredient ingredient, int sandwichLimit) {		
 		this.name = "CHEF " + ingredient.toString();
 		this.table = table;
+		this.sandwichLimit = sandwichLimit;
 		neededIngredients = new ArrayList<>(3);
 		
 		neededIngredients.add(Ingredient.PEANUT_BUTTER);
@@ -20,7 +22,7 @@ public class ChefCurry implements Runnable {
 	
 	@Override
 	public void run() {
-		while(table.getNumberOfSandwichesMade() < 20){
+		while(table.getNumberOfSandwichesMade() < sandwichLimit){
 			if(table.get(neededIngredients) == null)
 				break;
 			System.out.println(name + " got " + neededIngredients.get(0) + ", " + neededIngredients.get(1));

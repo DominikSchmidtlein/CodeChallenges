@@ -3,14 +3,16 @@ import java.util.ArrayList;
 public class Agent implements Runnable {
 
 	Table table;
+	int sandwichLimit;
 	
-	public Agent(Table table) {
+	public Agent(int sandwichLimit, Table table) {
 		this.table = table;
+		this.sandwichLimit = sandwichLimit;
 	}
 	
 	@Override
 	public void run() {
-		for(int i = 0; i < 20; i ++){
+		for(int i = 0; i < sandwichLimit; i ++){
 			ArrayList<Ingredient> ingredients = chooseIngredients();
 			table.put(ingredients);
 			System.out.println("Round " + (i + 1) + ", agent put " + ingredients.get(0) + " " + ingredients.get(1));
