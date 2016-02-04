@@ -51,6 +51,10 @@ public class Table {
 		return numberOfSandwichesMade;
 	}
 	
+	/**
+	 * Prints the contents of the class variable ingredients. If ingredients
+	 * is empty, then that is printed.
+	 */
 	private synchronized void printIngredients(){
 		String s = "Table contains";
 		for(Ingredient ingredient : ingredients)
