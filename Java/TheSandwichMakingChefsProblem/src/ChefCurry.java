@@ -7,6 +7,14 @@ public class ChefCurry implements Runnable {
 	private Table table;
 	private int sandwichLimit;
 	
+	/**
+	 * Creates a new chef who has a reference to the table, an ingredient in infinite supply
+	 * and a sandwich work order. Sets neededIngredients to the 2 ingredients that the chef
+	 * does not have.
+	 * @param table a reference to the table from which the chef gets the remaining ingredients
+	 * @param ingredient the ingredient that the chef has an infinite supply of
+	 * @param sandwichLimit the total number of sandwiches to be made by all chefs
+	 */
 	public ChefCurry(Table table, Ingredient ingredient, int sandwichLimit) {		
 		this.name = "CHEF " + ingredient.toString();
 		this.table = table;
@@ -20,23 +28,22 @@ public class ChefCurry implements Runnable {
 		neededIngredients.remove(ingredient);		
 	}
 	
+	/**
+	 * Until all sandwiches are made, grab the necessary ingredients and make a sandwich.
+	 */
 	@Override
 	public void run() {
 		while(table.getNumberOfSandwichesMade() < sandwichLimit){
 			if(table.get(neededIngredients) == null)
 				break;
-			System.out.println(name + " got " + neededIngredients.get(0) + ", " + neededIngredients.get(1));
 			this.withThePot();
 		}
-		System.out.println(name + " is done");
 	}
 	
+	/**
+	 * Analogous to making a sandwich. The chef prints his name and that he made a sandwich.
+	 */
 	private void withThePot(){
-		try {
-			Thread.sleep(500);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 		System.out.println(name + " made a sandwich.");
 	}
 	

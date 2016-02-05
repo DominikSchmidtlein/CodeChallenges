@@ -11,6 +11,9 @@ public class Table {
 	 */
 	private int numberOfSandwichesMade;
 	
+	/**
+	 * The maximum number of sandwiches to be made.
+	 */
 	private int sandwichLimit;
 
 	/**
@@ -38,7 +41,6 @@ public class Table {
 			}
 		}
 		this.ingredients.addAll(ingredients);
-		printIngredients();
 		notifyAll();
 	}
 
@@ -62,7 +64,6 @@ public class Table {
 					
 		this.ingredients.removeAll(ingredients);
 		incrementNumberOfSandwichesMade();
-		printIngredients();
 		notifyAll();
 		return ingredients;
 	}
@@ -74,21 +75,12 @@ public class Table {
 		numberOfSandwichesMade++;
 	}
 	
+	/**
+	 * Returns the number of sandwiches that have been made so far.
+	 * @return number of sandwiches made
+	 */
 	public synchronized int getNumberOfSandwichesMade(){
 		return numberOfSandwichesMade;
-	}
-	
-	/**
-	 * Prints the contents of the class variable ingredients. If ingredients
-	 * is empty, then that is printed.
-	 */
-	private synchronized void printIngredients(){
-		String s = "Table contains";
-		for(Ingredient ingredient : ingredients)
-			s += " " + ingredient;
-		if(ingredients.isEmpty())
-			s = "Table is empty";
-		System.out.println(s);
 	}
 
 }
