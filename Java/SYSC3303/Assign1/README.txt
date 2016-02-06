@@ -10,7 +10,8 @@ is a read/write request or an invalid packet format. The server then sends the a
 throws an exception and quits.
 
 INSTRUCTIONS
-1. Open/make a single project with the Host, Server and Client as files.
+1. Open the Assign1 folder as a project or, if that doesn't work, make one project with the Host, Server and Client
+as files.
 2. Run the Host.
 3. Run the Server.
 4. Run the Client

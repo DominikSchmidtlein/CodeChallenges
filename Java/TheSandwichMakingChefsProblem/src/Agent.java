@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class Agent implements Runnable {
 
-	Table table;
-	int sandwichLimit;
+	private Table table;
+	private int sandwichLimit;
 	
 	/**
 	 * Creates an agent.
