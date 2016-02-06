@@ -1,5 +1,11 @@
 import java.util.ArrayList;
 
+/**
+ * The chefs take ingredients off the table if it would give them all three ingredients.
+ * Otherwise they wait in the table's wait or blocked set.
+ * @author dominikschmidtlein
+ *
+ */
 public class ChefCurry implements Runnable {
 
 	private String name;

@@ -1,5 +1,11 @@
 import java.util.ArrayList;
 
+/**
+ * The agent is responsible for putting 2 of 3 ingredients on the table every round
+ * until the limit is reached.
+ * @author dominikschmidtlein
+ *
+ */
 public class Agent implements Runnable {
 
 	private Table table;

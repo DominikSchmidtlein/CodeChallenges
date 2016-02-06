@@ -1,5 +1,11 @@
 import java.util.ArrayList;
 
+/**
+ * The table has a lock which limits 1 thread to access it at a time. The table
+ * is where ingredients are placed by the agent and then used by the chefs.
+ * @author dominikschmidtlein
+ *
+ */
 public class Table {
 
 	/**

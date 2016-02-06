@@ -1,5 +1,10 @@
 import java.util.ArrayList;
 
+/**
+ * Main class is responsible for creating other classes and shutting down.
+ * @author dominikschmidtlein
+ *
+ */
 public class Main {
 	
 	public static final int SANDWICH_LIMIT = 20;
