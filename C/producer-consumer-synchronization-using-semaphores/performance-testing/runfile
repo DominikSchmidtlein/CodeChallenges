@@ -1,6 +1,0 @@
-./consumer 100 128 1&
-./producer
-./consumer 100 128 1&
-./producer
-./consumer 100 128 1&
-./producer
