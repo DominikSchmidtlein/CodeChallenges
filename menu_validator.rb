@@ -1,5 +1,8 @@
 class MenuValidator
   def validate(nodes)
+    unless valid_ids?(nodes.map { |e| e['id']})
+      return error('ids are not sequential and unique')
+    end
     roots = nodes.select { |e| !e.key?('parent_id') }
     output = { valid_menus: [], invalid_menus: [] }
     roots.each do |root|
@@ -11,6 +14,14 @@ class MenuValidator
   end
 
 private
+
+  def error(message)
+    { error: message }
+  end
+
+  def valid_ids?(ids)
+    ids == (1..ids.length).to_a
+  end
 
   def validate_menu(root, menus)
     seen_ids = []
